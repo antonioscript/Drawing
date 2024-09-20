@@ -38,6 +38,7 @@ D:\Projetos\Random\RandomNumber\bin\Debug\net6.0\runtimes\win-arm64\native\e_sql
 D:\Projetos\Random\RandomNumber\bin\Debug\net6.0\runtimes\win-x64\native\e_sqlite3.dll
 D:\Projetos\Random\RandomNumber\bin\Debug\net6.0\runtimes\win-x86\native\e_sqlite3.dll
 D:\Projetos\Random\RandomNumber\obj\Debug\net6.0\RandomNumber.csproj.CopyComplete
+D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\RandomNumber.exe
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\RandomNumber.deps.json
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\RandomNumber.runtimeconfig.json
@@ -54,7 +55,6 @@ D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-armel\native\libe_sqlit
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-mips64\native\libe_sqlite3.so
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-musl-arm\native\libe_sqlite3.so
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-musl-arm64\native\libe_sqlite3.so
-D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-ppc64le\native\libe_sqlite3.so
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-s390x\native\libe_sqlite3.so
 D:\Projetos\Drawing\draw\bin\Debug\net6.0\runtimes\linux-x64\native\libe_sqlite3.so

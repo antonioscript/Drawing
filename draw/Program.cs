@@ -17,6 +17,8 @@ class Program
 
         Console.WriteLine("Sorteio de números! Pressione Enter para sortear um número.");
         Console.WriteLine("Digite 'sair' a qualquer momento para encerrar o programa.");
+        Console.WriteLine("Digite '1' para marcar uma observação em um número já sorteado.");
+        Console.WriteLine("Digite '2' para exibir números com observações.");
 
         while (true)
         {
@@ -46,29 +48,55 @@ class Program
                     Console.WriteLine("Encerrando o programa. Até a próxima!");
                     break;
                 }
-
-                if (ObterTotalNumerosSorteados(connectionString) < maxNumeros)
+                else if (input == "1")
                 {
-                    // Sorteia um número não repetido
-                    do
+                    // Solicitar observação para um número já sorteado
+                    Console.WriteLine("Digite o número sorteado para adicionar uma observação:");
+                    if (int.TryParse(Console.ReadLine(), out int numeroParaObservacao))
                     {
-                        novoNumero = random.Next(1, maxNumeros + 1);
-                    } while (NumeroJaSorteado(connectionString, novoNumero));
-
-                    // Insere o novo número sorteado no banco de dados
-                    InserirNumeroSorteado(connectionString, novoNumero);
-
-                    // Exibe o novo número sorteado
-                    Console.WriteLine($"Número sorteado: {novoNumero}");
-
-                    // Exibe todos os números já sorteados
-                    var numerosSorteados = ObterNumerosSorteados(connectionString);
-                    Console.WriteLine("Números sorteados até agora: ");
-                    foreach (var numero in numerosSorteados)
-                    {
-                        Console.Write(numero + ", ");
+                        if (NumeroJaSorteado(connectionString, numeroParaObservacao))
+                        {
+                            Console.WriteLine("Digite a observação:");
+                            string observacao = Console.ReadLine();
+                            AdicionarObservacao(connectionString, numeroParaObservacao, observacao);
+                            Console.WriteLine($"Observação adicionada ao número {numeroParaObservacao}.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Número não sorteado ainda.");
+                        }
                     }
-                    Console.WriteLine(); // Quebra de linha para melhor visualização
+                }
+                else if (input == "2")
+                {
+                    // Exibe números com observações
+                    ExibirNumerosComObservacao(connectionString);
+                }
+                else
+                {
+                    if (ObterTotalNumerosSorteados(connectionString) < maxNumeros)
+                    {
+                        // Sorteia um número não repetido
+                        do
+                        {
+                            novoNumero = random.Next(1, maxNumeros + 1);
+                        } while (NumeroJaSorteado(connectionString, novoNumero));
+
+                        // Insere o novo número sorteado no banco de dados
+                        InserirNumeroSorteado(connectionString, novoNumero);
+
+                        // Exibe o novo número sorteado
+                        Console.WriteLine($"Número sorteado: {novoNumero}");
+
+                        // Exibe todos os números já sorteados
+                        var numerosSorteados = ObterNumerosSorteados(connectionString);
+                        Console.WriteLine("Números sorteados até agora: ");
+                        foreach (var numero in numerosSorteados)
+                        {
+                            Console.Write(numero + ", ");
+                        }
+                        Console.WriteLine(); // Quebra de linha para melhor visualização
+                    }
                 }
             }
         }
@@ -89,7 +117,8 @@ class Program
             connection.Open();
             string tableCommand = @"CREATE TABLE IF NOT EXISTS NumerosSorteados (
                                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                    NumeroSorteado INT NOT NULL)";
+                                    NumeroSorteado INT NOT NULL,
+                                    Observacao TEXT)";
             SqliteCommand createTable = new SqliteCommand(tableCommand, connection);
             createTable.ExecuteNonQuery();
         }
@@ -159,6 +188,41 @@ class Program
             string deleteCommand = "DELETE FROM NumerosSorteados";
             SqliteCommand command = new SqliteCommand(deleteCommand, connection);
             command.ExecuteNonQuery();
+        }
+    }
+
+    // Novo método para adicionar observação
+    static void AdicionarObservacao(string connectionString, int numero, string observacao)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            string updateCommand = "UPDATE NumerosSorteados SET Observacao = @Observacao WHERE NumeroSorteado = @Numero";
+            SqliteCommand command = new SqliteCommand(updateCommand, connection);
+            command.Parameters.AddWithValue("@Observacao", observacao);
+            command.Parameters.AddWithValue("@Numero", numero);
+            command.ExecuteNonQuery();
+        }
+    }
+
+    // Novo método para exibir números com observação
+    static void ExibirNumerosComObservacao(string connectionString)
+    {
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            connection.Open();
+            string selectCommand = "SELECT NumeroSorteado, Observacao FROM NumerosSorteados WHERE Observacao IS NOT NULL";
+            SqliteCommand command = new SqliteCommand(selectCommand, connection);
+            using (var reader = command.ExecuteReader())
+            {
+                Console.WriteLine("Números com observações:");
+                while (reader.Read())
+                {
+                    int numero = reader.GetInt32(0);
+                    string observacao = reader.GetString(1);
+                    Console.WriteLine($"Número: {numero}, Observação: {observacao}");
+                }
+            }
         }
     }
 }
